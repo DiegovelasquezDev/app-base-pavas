@@ -65,8 +65,8 @@ export default function Login() {
 
   return (
     <main className={currentMode === "Dark" ? "dark" : ""}>
-      <section className="bg-gray-100 dark:bg-gray-900 animate__animated animate__fadeIn">
-        <div className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-16 h-screen">
+      <section className="bg-gray-100 dark:bg-gray-900">
+        <div className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-16 h-screen animate__animated animate__fadeIn">
           <a
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"

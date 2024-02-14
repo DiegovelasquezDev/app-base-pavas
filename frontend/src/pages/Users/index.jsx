@@ -12,6 +12,7 @@ import {
 } from "../../utils/api/apiCalls/UserApi";
 import usePagination from "../../utils/hooks/usePagination";
 import { useSnackbar } from "notistack";
+import RegisterUserModal from "../../components/Modals/RegisterUserModal";
 
 const columns = [
   { key: "dni", label: "Documento" },
@@ -19,6 +20,7 @@ const columns = [
   { key: "lastName", label: "Apellidos" },
   { key: "email", label: "Correo electronico" },
   { key: "created_at", label: "Fecha de creacion" },
+  { key: "updated_at", label: "Fecha de actualizacion" },
 ];
 
 export default function Users() {
@@ -32,6 +34,8 @@ export default function Users() {
     loadData,
   } = usePagination(GetUsersPagination);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -67,11 +71,17 @@ export default function Users() {
   return (
     <WrapperComponent category={"Pages"} title={"Usuarios"}>
       <>
+        <RegisterUserModal
+          title={"Registrar"}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
         <SearchComponent
           label="Buscar documento ..."
           search={search}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
+          setModal={setShowModal}
         />
 
         {loading ? (

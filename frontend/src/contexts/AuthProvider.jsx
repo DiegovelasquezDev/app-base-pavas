@@ -19,7 +19,6 @@ const AuthProvider = ({ children }) => {
 
       try {
         const response = await GetCurrentUserApi();
-        console.log("se inicio sesion");
         navigate("/");
         setAuth(response.data.userSession);
       } catch (error) {
@@ -32,8 +31,13 @@ const AuthProvider = ({ children }) => {
     authenticaUser();
   }, []);
 
+  const closeSession = () => {
+    setAuth({});
+    localStorage.removeItem("token");
+  };
+
   return (
-    <AuthContext.Provider value={{ auth, loadingAuth, setAuth }}>
+    <AuthContext.Provider value={{ auth, loadingAuth, setAuth, closeSession }}>
       {children}
     </AuthContext.Provider>
   );

@@ -9,7 +9,9 @@ import useAuth from "../../utils/hooks/useAuth";
 
 export default function UserProfileComponent() {
   const { currentColor } = useStateContext();
-  const { auth } = useAuth();
+  const { auth, closeSession } = useAuth();
+
+  const handleCloseSession = () => closeSession();
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -68,13 +70,18 @@ export default function UserProfileComponent() {
         ))}
       </div>
       <div className="mt-5">
-        <ButtonComponent
-          color="white"
-          bgColor={currentColor}
-          text="Logout"
-          borderRadius="10px"
-          width="full"
-        />
+        <button
+          type="button"
+          onClick={handleCloseSession}
+          style={{
+            backgroundColor: currentColor,
+            color: "white",
+            borderRadius: "10px",
+          }}
+          className={` text-logout p-3 w-full hover:drop-shadow-xl hover:bg-${currentColor}`}
+        >
+          Cerrar sesion
+        </button>
       </div>
     </div>
   );

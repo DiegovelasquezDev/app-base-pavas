@@ -57,3 +57,27 @@ export const deleteUserApi = (id) => {
       });
   });
 };
+
+export const createUserApi = (user) => {
+  return new Promise((resolve, reject) => {
+    HttpClient.post("/createUser", user)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const updateUserApi = ({ id, newPassword }) => {
+  return new Promise((resolve, reject) => {
+    HttpClient.put(`/updateUser?id=${id}`, newPassword)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};

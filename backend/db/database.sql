@@ -23,7 +23,7 @@ DELIMITER // CREATE PROCEDURE sp_paginationUser (
 DECLARE startPagination INT;
 DECLARE endPagination INT;
 DECLARE columnsPagination VARCHAR(200);
-SET columnsPagination = "id, dni, firstName, lastName, email, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') AS created_at";
+SET columnsPagination = "id, dni, firstName, lastName, email, DATE_FORMAT(created_at, '%d/%m/%Y %H:%i:%s') AS created_at, DATE_FORMAT(updated_at, '%d/%m/%Y %H:%i:%s') AS updated_at";
 SET totalRecords = 0;
 IF numberPage = 1 THEN
 SET startPagination = 0;
