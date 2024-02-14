@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import ModalComponent from "../utilsComponents/ModalComponent";
 import useForm from "../../utils/hooks/useForm";
-// import { createUserApi } from "../../utils/api/apiCalls/UserApi";
+import { createUserApi } from "../../utils/api/apiCalls/UserApi";
+import { LoadingComponent } from "../../components";
 import { useSnackbar } from "notistack";
 
 const initialState = {
@@ -13,16 +14,49 @@ const initialState = {
 };
 
 const RegisterUserModal = (props) => {
-  const { dni, firstName, lastName, email, password } = useForm(initialState);
+  const { dni, firstName, lastName, email, password, onInputChange } =
+    useForm(initialState);
   const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    enqueueSnackbar("Se registro con exito", {
+      variant: "success",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
+    });
+
+    try {
+      await createUserApi({
+        dni,
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+
+      props.setShowModal(false);
+      props.loadData();
+    } catch (error) {
+      enqueueSnackbar("Sucedio algo", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "right",
+        },
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <ModalComponent {...props}>
-      <form className="w-full max-w-lg">
+      <form className="w-full max-w-lg" onSubmit={onSubmit}>
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
@@ -35,7 +69,10 @@ const RegisterUserModal = (props) => {
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="id"
               type="text"
-              placeholder="12345678A"
+              placeholder="12345678"
+              name="dni"
+              value={dni}
+              onChange={onInputChange}
             />
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -50,6 +87,9 @@ const RegisterUserModal = (props) => {
               id="grid-first-name"
               type="text"
               placeholder="Jane"
+              name="firstName"
+              value={firstName}
+              onChange={onInputChange}
             />
           </div>
         </div>
@@ -66,6 +106,9 @@ const RegisterUserModal = (props) => {
               id="grid-last-name"
               type="text"
               placeholder="Doe"
+              name="lastName"
+              value={lastName}
+              onChange={onInputChange}
             />
           </div>
           <div className="w-full md:w-1/2 px-3">
@@ -80,6 +123,9 @@ const RegisterUserModal = (props) => {
               id="grid-email"
               type="email"
               placeholder="jane.doe@example.com"
+              name="email"
+              value={email}
+              onChange={onInputChange}
             />
           </div>
         </div>
@@ -96,6 +142,9 @@ const RegisterUserModal = (props) => {
               id="grid-password"
               type="password"
               placeholder="******************"
+              name="password"
+              value={password}
+              onChange={onInputChange}
             />
           </div>
         </div>
@@ -108,6 +157,7 @@ const RegisterUserModal = (props) => {
           </button>
         </div>
       </form>
+      {loading && <LoadingComponent loading={loading} />}
     </ModalComponent>
   );
 };

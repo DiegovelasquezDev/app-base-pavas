@@ -75,6 +75,7 @@ export default function Users() {
           title={"Registrar"}
           showModal={showModal}
           setShowModal={setShowModal}
+          loadData={loadData}
         />
         <SearchComponent
           label="Buscar documento ..."
