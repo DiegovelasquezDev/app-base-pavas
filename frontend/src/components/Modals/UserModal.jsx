@@ -7,7 +7,19 @@ import { validateInteger, validateEmail, validatePassword } from "../../utils/fu
 import useSnackbarHandler from "../../utils/hooks/useSnackbarHandle";
 import { userModel } from "../../models/userModel"
 
-const UserModal = (props) => {
+
+function formatDateToMySQLFormat(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
+const UserModal = ({ editMode, selectedUser, localData, setLocalData, ...props }) => {
   const {
     dni,
     firstName,
@@ -26,19 +38,20 @@ const UserModal = (props) => {
     event.preventDefault();
 
     if (!validatePassword(password)) {
-      showSnackbar("Por favor ingresa una contraseña valida, debe contener una mayuscula, una miniscula, numeros, un caracter especial y al menos 8 caracteres", "warning", true);
+      showSnackbar("Por favor ingresa una contraseña valida, debe contener una mayuscula, una miniscula, numeros, un caracter especial y al menos 8 caracteres", "warning", false);
       return
     }
 
     try {
       setLoading(true);
 
-      if (props.editMode) {
-        const id = props.selectedUser.id;
-        await updateUserApi({ id, password });
-        props.loadData();
+      if (editMode) {
+        const id = selectedUser.id;
+        // await updateUserApi({ id, password });
+        const updateDate = localData.map(data => (data.id === id ? { ...data, updated_at: formatDateToMySQLFormat(new Date()) } : data))
+        console.log(updateDate)
+        setLocalData(updateDate);
         showSnackbar("Se actualizó con éxito el usuario", "success", false);
-
       } else {
         if (!validateInteger(dni)) {
           showSnackbar("Por favor ingresa un documento valido", "warning", false);
@@ -49,18 +62,19 @@ const UserModal = (props) => {
           showSnackbar("Por favor ingresa un email valido", "warning", false);
           return
         }
-        await createUserApi({
-          dni,
-          firstName,
-          lastName,
-          email,
-          password,
-        });
-        props.loadData();
+        // await createUserApi({
+        //   dni,
+        //   firstName,
+        //   lastName,
+        //   email,
+        //   password,
+        // });
+
         showSnackbar("Se registró con éxito el usuario", "success", false);
       }
     } catch (error) {
-      const errorMessage = props.editMode
+      console.log(error)
+      const errorMessage = editMode
         ? "No se pudo actualizar el usuario"
         : "No se pudo registrar el usuario";
       showSnackbar(errorMessage, "error", false);
@@ -87,10 +101,10 @@ const UserModal = (props) => {
               type="number"
               placeholder="12345678"
               name="dni"
-              value={props.editMode ? props.selectedUser.dni : dni}
+              value={editMode ? selectedUser.dni : dni}
               onChange={onInputChange}
-              disabled={props.editMode}
-              required={props.editMode ? false : true}
+              disabled={editMode}
+              required={editMode ? false : true}
             />
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -106,10 +120,10 @@ const UserModal = (props) => {
               type="text"
               placeholder="Jane"
               name="firstName"
-              value={props.editMode ? props.selectedUser.firstName : firstName}
+              value={editMode ? selectedUser.firstName : firstName}
               onChange={onInputChange}
-              disabled={props.editMode}
-              required={props.editMode ? false : true}
+              disabled={editMode}
+              required={editMode ? false : true}
             />
           </div>
         </div>
@@ -127,10 +141,10 @@ const UserModal = (props) => {
               type="text"
               placeholder="Doe"
               name="lastName"
-              value={props.editMode ? props.selectedUser.lastName : lastName}
+              value={editMode ? selectedUser.lastName : lastName}
               onChange={onInputChange}
-              disabled={props.editMode}
-              required={props.editMode ? false : true}
+              disabled={editMode}
+              required={editMode ? false : true}
             />
           </div>
           <div className="w-full md:w-1/2 px-3">
@@ -146,10 +160,10 @@ const UserModal = (props) => {
               type="email"
               placeholder="jane.doe@example.com"
               name="email"
-              value={props.editMode ? props.selectedUser.email : email}
+              value={editMode ? selectedUser.email : email}
               onChange={onInputChange}
-              disabled={props.editMode}
-              required={props.editMode ? false : true}
+              disabled={editMode}
+              required={editMode ? false : true}
             />
           </div>
         </div>

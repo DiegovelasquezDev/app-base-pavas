@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+import React from "react";
+import { AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineReload } from "react-icons/ai";
 
 export default function PaginationComponent({
   totalRecords,
@@ -8,6 +8,7 @@ export default function PaginationComponent({
   itemsPerPage,
   onChange,
   onPageSizeChange,
+  loadData
 }) {
   return (
     <div className="flex flex-row mt-2 items-center justify-end">
@@ -34,12 +35,19 @@ export default function PaginationComponent({
       </span>
       <div className="inline-flex mt-2 xs:mt-0">
         <button
+          onClick={() => loadData()}
+          className="flex ml-1 items-center justify-center px-4 h-10 text-base font-medium text-gray-700 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded hover-bg-gray-900 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white"
+        >
+          <AiOutlineReload />
+        </button>
+        <button
           onClick={() => onChange(numberPage - 1)}
           disabled={numberPage === 1}
           className="flex ml-1 items-center justify-center px-4 h-10 text-base font-medium text-gray-700 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded hover-bg-gray-900 dark-bg-gray-800 dark-border-gray-700 dark-text-gray-400 dark-hover-bg-gray-700 dark-hover-text-white"
         >
           <AiOutlineArrowLeft />
         </button>
+
         <button
           onClick={() => onChange(numberPage + 1)}
           disabled={numberPage === totalPages}

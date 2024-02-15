@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SearchComponent,
   PaginationComponent,
@@ -38,6 +38,9 @@ export default function Users() {
   const { showSnackbar } = useSnackbarHandler();
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [localData, setLocalData] = useState([]);
+
+  useEffect(() => setLocalData(pagination.data), [pagination])
 
   const handleEdit = (user) => {
     setEditMode(true);
@@ -58,8 +61,8 @@ export default function Users() {
       )
     ) {
       try {
-        await deleteUserApi(user.id);
-        loadData();
+        // await deleteUserApi(user.id);
+        setLocalData(localData.filter(item => item.id !== user.id))
         showSnackbar("Usuario eliminado con exito", "success", false)
       } catch (error) {
         showSnackbar("No se pudo eliminar el usuario", "error", false)
@@ -77,7 +80,8 @@ export default function Users() {
           title={editMode ? "Editar Usuario" : "Registrar usuario"}
           showModal={showModal}
           setShowModal={setShowModal}
-          loadData={loadData}
+          localData={localData}
+          setLocalData={setLocalData}
           editMode={editMode}
           selectedUser={selectedUser}
         />
@@ -94,7 +98,7 @@ export default function Users() {
           <>
             <TableComponent
               columns={columns}
-              data={pagination.data}
+              data={localData}
               onDelete={handleDelete}
               onEdit={handleEdit}
             />
@@ -105,6 +109,7 @@ export default function Users() {
               itemsPerPage={pagination.itemsPerPage}
               onChange={goToPage}
               onPageSizeChange={changePageSize}
+              loadData={loadData}
             />
           </>
         )}
