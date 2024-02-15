@@ -1,65 +1,61 @@
 import React, { useState } from "react";
-import { useStateContext } from "../../contexts/ContextProvider";
 import { FaGithub } from "react-icons/fa";
-import { useSnackbar } from "notistack";
-// Utils api
-import { loginUserApi } from "../../utils/api/apiCalls/UserApi";
-// utils regex
-import { validateEmail } from "../../utils/functions/ValidateRegex";
-// Hooks
+
+// Context y Hooks
+import { useStateContext } from "../../contexts/ContextProvider";
 import useAuth from "../../utils/hooks/useAuth";
 import useForm from "../../utils/hooks/useForm";
-// Models
+import useSnackbarHandle from "../../utils/hooks/useSnackbarHandle";
+
+// API Calls
+import { loginUserApi } from "../../utils/api/apiCalls/UserApi";
+
+// Validaciones y Modelos
+import { validateEmail } from "../../utils/functions/ValidateRegex";
 import { loginModel } from "../../models";
-// Components
+
+// Componentes
 import { LoadingComponent } from "../../components";
 
-export default function Login() {
+const Login = () => {
   const { setAuth } = useAuth();
   const { currentMode } = useStateContext();
   const { email, password, onInputChange } = useForm(loginModel);
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbarHandle();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (event) => {
+  const onLogin = async (event) => {
     event.preventDefault();
-    setLoading(true);
     if (!validateEmail(email)) {
-      enqueueSnackbar("Ingresa un correo electronico valido", {
-        variant: "warning",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "right",
-        },
-      });
+      showSnackbar(`El correo electrónico ingresado no es válido`, "warning", false);
       return;
     }
 
     try {
+      setLoading(true);
       const data = await loginUserApi({ email, password });
-      localStorage.setItem("token", data.user.token);
-      setAuth(data.user);
+      handleLoginSuccess(data);
     } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.errorMessage;
-        enqueueSnackbar(errorMessage, {
-          variant: "warning",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
-      } else {
-        enqueueSnackbar("Servidor no esta funcionando", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
-      }
+      handleLoginError(error);
+
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLoginSuccess = (data) => {
+    localStorage.setItem("token", data.user.token);
+    setAuth(data.user);
+    location.reload();
+  };
+
+  const handleLoginError = (error) => {
+    if (error.response) {
+
+      const errorMessage = error.response.data.errorMessage;
+      showSnackbar(`${errorMessage}`, "error", false);
+    } else {
+      showSnackbar("Servidor no está funcionando", "error", true);
     }
   };
 
@@ -79,7 +75,7 @@ export default function Login() {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
                 Inicia sesión en tu cuenta
               </h1>
-              <form className="space-y-4 md:space-y-6" onSubmit={onSubmit}>
+              <form className="space-y-4 md:space-y-6" onSubmit={onLogin}>
                 <div>
                   <label
                     htmlFor="userName"
@@ -119,9 +115,8 @@ export default function Login() {
 
                 <button
                   type="submit"
-                  className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-sky-700 hover:bg-sky-400 ${
-                    loading ? "bg-gray-300 hover:bg-gray-300" : null
-                  }`}
+                  className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-sky-700 hover:bg-sky-400 ${loading ? "bg-gray-300 hover:bg-gray-300" : null
+                    }`}
                   disabled={loading}
                 >
                   LOG IN
@@ -135,3 +130,5 @@ export default function Login() {
     </main>
   );
 }
+
+export default Login;

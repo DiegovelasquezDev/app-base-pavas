@@ -1,0 +1,65 @@
+# INSTALAR REST CLIENT EN LAS EXTENCIONES DE VISUAL CODE | DAR CLICK EN Send Request para enviar una peticion
+
+@baseUrl = http://localhost:5000
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3MzExYWE3OC1jYzAwLTExZWUtOTM1Ni1kNDNkN2U1YTViZTciLCJpYXQiOjE3MDgwMDUyMzEsImV4cCI6MTcwODAwODgzMX0.ZtcLX1rcjSO26UyKLiAdA6t9mjTD6t8T6EuuYWnjQ_c
+
+### Ping
+GET {{baseUrl}}/ping
+
+### Peticion
+PUT {{baseUrl}}/ruta
+Content-Type: application/json
+Authorization: {{token}}
+{
+}
+
+### Login
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "email": "diego.velasquez.dev@gmail.com",
+    "password" : "Di100115*$"
+}
+
+### Create user
+POST {{baseUrl}}/api/createUser
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "dni" : "123125654",
+    "firstName" :"Prueba",
+    "lastName" :"Usuario",
+    "email" :"dev8@correo.com",
+    "password" :"Di1001*"
+}
+
+### Get user session
+GET {{baseUrl}}/api/getUserSession
+Authorization: {{token}}
+
+### Pagination user
+GET {{baseUrl}}/api/paginationUser?dni=&orderPagination=&orderColumn=&numberPage=&itemsPerPage=
+Authorization: {{token}}
+
+### Get all users
+GET {{baseUrl}}/api/getAllUsers
+Authorization: {{token}}
+
+### Get user By Id
+GET {{baseUrl}}/api/getUserById?id=36e5b91e-cb3d-11ee-a450-14dae9a99223
+Authorization: {{token}}
+
+### Update password user
+PUT {{baseUrl}}/api/updateUser?id=5a451f65-cc07-11ee-9356-d43d7e5a5be7
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "password" : "Do1001*"
+}
+
+### Delete user by id
+DELETE {{baseUrl}}/api/deleteUser?id=cb97759f-cb41-11ee-a450-14dae9a99223
+Authorization: {{token}}

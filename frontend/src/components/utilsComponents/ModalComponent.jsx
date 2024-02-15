@@ -7,7 +7,7 @@ const ModalComponent = ({ title, showModal, setShowModal, children }) => {
       {showModal ? (
         <>
           <div className="justify-center bg-transparent items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl bg-white dark:bg-gray-800 rounded-lg ">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl bg-white dark:bg-gray-800 rounded-lg animate__animated animate__zoomIn">
               {/* content */}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none border-blueGray-200 dark:border-gray-600">
                 {/* header */}

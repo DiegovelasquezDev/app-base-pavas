@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { WrapperComponent } from "../../components";
+import useAuth from "../../utils/hooks/useAuth";
 
 export default function Profile() {
+
+  const { auth, closeSession } = useAuth();
+
   const [userData, setUserData] = useState({
-    UserName: "10016436426",
+    dni: auth[0].dni,
     Rol: "Administrador",
-    firstName: "Diego ALejandro",
-    lastName: "Velasquez Araque",
-    email: "diego.velasquez.dev@gmail.com",
+    firstName: auth[0].firstName,
+    lastName: auth[0].lastName,
+    email: auth[0].email,
     password: "********",
   });
 
@@ -31,7 +35,7 @@ export default function Profile() {
               <label className="block text-gray-600 font-semibold">
                 Documento
               </label>
-              <p>{userData.UserName}</p>
+              <p>{userData.dni}</p>
             </div>
             <div className="mb-4">
               <label className="block text-gray-600 font-semibold">Rol</label>
@@ -63,42 +67,6 @@ export default function Profile() {
           <div className="w-full md:w-1/2 mt-8 md:mt-0">
             <h2 className="text-2xl font-semibold mb-4">Editar Información</h2>
             <form>
-              <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={userData.firstName}
-                  onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">
-                  Apellido
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={userData.lastName}
-                  onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">
-                  Correo Electrónico
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
               <div className="mb-4">
                 <label className="block text-gray-600 font-semibold">
                   Contraseña

@@ -1,18 +1,20 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+
 import { PrivateRoutes } from "./PrivateRoutes";
 import { AuthRoutes } from "./AuthRoutes";
 import { MainRoutes } from "./MainRoutes";
 import useAuth from "../utils/hooks/useAuth";
 
+import { LoaderComponent } from "../components"
 import { Error } from "../pages";
-import { useEffect } from "react";
 
 export const AppRouter = () => {
-  const { auth, loadingAuth } = useAuth();
+  const { loadingAuth } = useAuth();
 
-  useEffect(() => {}, [auth]);
-
-  if (loadingAuth) return;
+  if (loadingAuth) {
+    return <LoaderComponent />
+  }
 
   return (
     <Routes>

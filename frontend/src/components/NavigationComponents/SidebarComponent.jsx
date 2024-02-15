@@ -1,10 +1,8 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../../utils/img/cometa.png";
 import { MdOutlineCancel } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { links } from "../../utils/data/links";
-
 import { useStateContext } from "../../contexts/ContextProvider";
 
 export default function SidebarComponent() {

@@ -1,56 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalComponent from "../utilsComponents/ModalComponent";
 import useForm from "../../utils/hooks/useForm";
-import { createUserApi } from "../../utils/api/apiCalls/UserApi";
-import { LoadingComponent } from "../../components";
-import { useSnackbar } from "notistack";
+import { createUserApi, updateUserApi } from "../../utils/api/apiCalls/UserApi";
+import { LoadingComponent } from "..";
+import { validateInteger, validateEmail, validatePassword } from "../../utils/functions"
+import useSnackbarHandler from "../../utils/hooks/useSnackbarHandle";
+import { userModel } from "../../models/userModel"
 
-const initialState = {
-  dni: "",
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-};
-
-const RegisterUserModal = (props) => {
-  const { dni, firstName, lastName, email, password, onInputChange } =
-    useForm(initialState);
-  const { enqueueSnackbar } = useSnackbar();
+const UserModal = (props) => {
+  const {
+    dni,
+    firstName,
+    lastName,
+    email,
+    password,
+    onResetForm,
+    onInputChange,
+  } = useForm(userModel);
+  const { showSnackbar } = useSnackbarHandler();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => onResetForm(), [props.showModal])
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    enqueueSnackbar("Se registro con exito", {
-      variant: "success",
-      anchorOrigin: {
-        vertical: "top",
-        horizontal: "right",
-      },
-    });
+
+    if (!validatePassword(password)) {
+      showSnackbar("Por favor ingresa una contraseña valida, debe contener una mayuscula, una miniscula, numeros, un caracter especial y al menos 8 caracteres", "warning", true);
+      return
+    }
 
     try {
-      await createUserApi({
-        dni,
-        firstName,
-        lastName,
-        email,
-        password,
-      });
+      setLoading(true);
 
-      props.setShowModal(false);
-      props.loadData();
+      if (props.editMode) {
+        const id = props.selectedUser.id;
+        await updateUserApi({ id, password });
+        props.loadData();
+        showSnackbar("Se actualizó con éxito el usuario", "success", false);
+
+      } else {
+        if (!validateInteger(dni)) {
+          showSnackbar("Por favor ingresa un documento valido", "warning", false);
+          return
+        }
+
+        if (!validateEmail(email)) {
+          showSnackbar("Por favor ingresa un email valido", "warning", false);
+          return
+        }
+        await createUserApi({
+          dni,
+          firstName,
+          lastName,
+          email,
+          password,
+        });
+        props.loadData();
+        showSnackbar("Se registró con éxito el usuario", "success", false);
+      }
     } catch (error) {
-      enqueueSnackbar("Sucedio algo", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "right",
-        },
-      });
+      const errorMessage = props.editMode
+        ? "No se pudo actualizar el usuario"
+        : "No se pudo registrar el usuario";
+      showSnackbar(errorMessage, "error", false);
     } finally {
       setLoading(false);
+      props.setShowModal(false)
     }
   };
 
@@ -68,11 +84,13 @@ const RegisterUserModal = (props) => {
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="id"
-              type="text"
+              type="number"
               placeholder="12345678"
               name="dni"
-              value={dni}
+              value={props.editMode ? props.selectedUser.dni : dni}
               onChange={onInputChange}
+              disabled={props.editMode}
+              required={props.editMode ? false : true}
             />
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -88,8 +106,10 @@ const RegisterUserModal = (props) => {
               type="text"
               placeholder="Jane"
               name="firstName"
-              value={firstName}
+              value={props.editMode ? props.selectedUser.firstName : firstName}
               onChange={onInputChange}
+              disabled={props.editMode}
+              required={props.editMode ? false : true}
             />
           </div>
         </div>
@@ -107,8 +127,10 @@ const RegisterUserModal = (props) => {
               type="text"
               placeholder="Doe"
               name="lastName"
-              value={lastName}
+              value={props.editMode ? props.selectedUser.lastName : lastName}
               onChange={onInputChange}
+              disabled={props.editMode}
+              required={props.editMode ? false : true}
             />
           </div>
           <div className="w-full md:w-1/2 px-3">
@@ -124,8 +146,10 @@ const RegisterUserModal = (props) => {
               type="email"
               placeholder="jane.doe@example.com"
               name="email"
-              value={email}
+              value={props.editMode ? props.selectedUser.email : email}
               onChange={onInputChange}
+              disabled={props.editMode}
+              required={props.editMode ? false : true}
             />
           </div>
         </div>
@@ -145,6 +169,7 @@ const RegisterUserModal = (props) => {
               name="password"
               value={password}
               onChange={onInputChange}
+              required
             />
           </div>
         </div>
@@ -153,7 +178,7 @@ const RegisterUserModal = (props) => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Registrar
+            {props.editMode ? "Guardar cambios" : "Registrar"}
           </button>
         </div>
       </form>
@@ -162,4 +187,4 @@ const RegisterUserModal = (props) => {
   );
 };
 
-export default RegisterUserModal;
+export default UserModal;

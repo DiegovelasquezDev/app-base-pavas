@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NoDataAvailableComponent from "../utilsComponents/NoDataAvailableComponent";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -6,8 +6,8 @@ import { MdDelete } from "react-icons/md";
 export default function TableComponent({
   columns,
   data,
-  OpenEditarModal,
   onDelete,
+  onEdit
 }) {
   if (!data || data.length === 0) {
     return <NoDataAvailableComponent />;
@@ -41,7 +41,7 @@ export default function TableComponent({
               ))}
               <td className="px-6 py-4 flex items-center">
                 <a
-                  onClick={() => OpenEditarModal}
+                  onClick={() => onEdit(item)}
                   className="mr-2 text-xl font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
                 >
                   <FaEdit />

@@ -14,5 +14,6 @@ export { default as SidebarComponent } from "./NavigationComponents/SidebarCompo
 export { default as ThemeSettingsComponent } from "./NavigationComponents/ThemeSettingsComponent";
 export * from "./index";
 export { default as LoadingComponent } from "./utilsComponents/LoadingComponent";
+export { default as LoaderComponent } from "./LayoutsComponents/LoaderComponent";
 export { default as ModalComponent } from "./utilsComponents/ModalComponent";
 export { default as NoDataAvailableComponent } from "./utilsComponents/NoDataAvailableComponent";

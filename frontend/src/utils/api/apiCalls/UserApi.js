@@ -23,7 +23,7 @@ export const loginUserApi = (user) => {
 export const GetUsersPagination = (request) => {
   return new Promise((resolve, reject) => {
     HttpClient.get(
-      `/paginationUser?numberPage=${request.numberPage}&itemsPerPage=${request.itemsPerPage}&dni=${request.search}`
+      `/paginationUser?numberPage=${request.numberPage}&itemsPerPage=${request.itemsPerPage}&search=${request.search}`
     )
       .then((response) => {
         resolve(response);
@@ -70,9 +70,10 @@ export const createUserApi = (user) => {
   });
 };
 
-export const updateUserApi = ({ id, newPassword }) => {
+export const updateUserApi = ({ id, password }) => {
   return new Promise((resolve, reject) => {
-    HttpClient.put(`/updateUser?id=${id}`, newPassword)
+    console.log({ id, password })
+    HttpClient.put(`/updateUser?id=${id}`, { password })
       .then((response) => {
         resolve(response);
       })

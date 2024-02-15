@@ -25,6 +25,7 @@ export default function UserProfileComponent() {
           borderRadius="50%"
         />
       </div>
+
       <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
         <img
           className="rounded-full h-24 w-24"
@@ -33,34 +34,29 @@ export default function UserProfileComponent() {
         />
         <div>
           <p className="font-semibold text-xl dark:text-gray-200">
-            {" "}
-            {auth[0].id ? auth[0].firstName + " " + auth[0].lastName : ""}
+            {auth[0]?.id ? `${auth[0].firstName} ${auth[0].lastName}` : ""}
           </p>
           <p className="text-gray-500 text-sm dark:text-gray-400">
-            {" "}
-            Administrator{" "}
+            Administrator
           </p>
           <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">
-            {" "}
-            {auth[0].id ? auth[0].email : ""}
+            {auth[0]?.id ? auth[0].email : ""}
           </p>
         </div>
       </div>
+
       <div>
         {userProfileData.map((item, index) => (
           <Link key={index} to={item.url}>
-            <div className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
+            <div className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer dark:hover:bg-[#42464D]">
               <div
                 style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-                className=" text-xl rounded-lg p-3 hover:bg-light-gray"
+                className="text-xl rounded-lg p-3 hover:bg-light-gray"
               >
                 {item.icon}
               </div>
-
               <div>
-                <p className="font-semibold dark:text-gray-200 ">
-                  {item.title}
-                </p>
+                <p className="font-semibold dark:text-gray-200">{item.title}</p>
                 <p className="text-gray-500 text-sm dark:text-gray-400">
                   {item.desc}
                 </p>
@@ -69,6 +65,7 @@ export default function UserProfileComponent() {
           </Link>
         ))}
       </div>
+
       <div className="mt-5">
         <button
           type="button"
@@ -78,9 +75,9 @@ export default function UserProfileComponent() {
             color: "white",
             borderRadius: "10px",
           }}
-          className={` text-logout p-3 w-full hover:drop-shadow-xl hover:bg-${currentColor}`}
+          className={`text-logout p-3 w-full hover:drop-shadow-xl hover:bg-${currentColor}`}
         >
-          Cerrar sesion
+          Cerrar sesión
         </button>
       </div>
     </div>

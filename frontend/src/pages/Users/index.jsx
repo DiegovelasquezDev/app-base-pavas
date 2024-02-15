@@ -11,8 +11,8 @@ import {
   deleteUserApi,
 } from "../../utils/api/apiCalls/UserApi";
 import usePagination from "../../utils/hooks/usePagination";
-import { useSnackbar } from "notistack";
-import RegisterUserModal from "../../components/Modals/RegisterUserModal";
+import UserModal from "../../components/Modals/UserModal";
+import useSnackbarHandler from "../../utils/hooks/useSnackbarHandle";
 
 const columns = [
   { key: "dni", label: "Documento" },
@@ -34,10 +34,22 @@ export default function Users() {
     loadData,
   } = usePagination(GetUsersPagination);
   const [searchTerm, setSearchTerm] = useState("");
-
   const [showModal, setShowModal] = useState(false);
+  const { showSnackbar } = useSnackbarHandler();
+  const [editMode, setEditMode] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const handleEdit = (user) => {
+    setEditMode(true);
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+
+  const handleRegister = () => {
+    setEditMode(false);
+    setSelectedUser(null);
+    setShowModal(true);
+  };
 
   const handleDelete = async (user) => {
     if (
@@ -48,43 +60,34 @@ export default function Users() {
       try {
         await deleteUserApi(user.id);
         loadData();
-        enqueueSnackbar("Usuario eliminado con exito", {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
+        showSnackbar("Usuario eliminado con exito", "success", false)
       } catch (error) {
-        console.error(error);
-        enqueueSnackbar("No se pudo eliminar el usuario", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
+        showSnackbar("No se pudo eliminar el usuario", "error", false)
       }
     }
   };
 
+
+
+
   return (
     <WrapperComponent category={"Pages"} title={"Usuarios"}>
       <>
-        <RegisterUserModal
-          title={"Registrar"}
+        <UserModal
+          title={editMode ? "Editar Usuario" : "Registrar usuario"}
           showModal={showModal}
           setShowModal={setShowModal}
           loadData={loadData}
+          editMode={editMode}
+          selectedUser={selectedUser}
         />
         <SearchComponent
-          label="Buscar documento ..."
+          label="Buscar ..."
           search={search}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          setModal={setShowModal}
+          setModal={handleRegister}
         />
-
         {loading ? (
           <LoadingComponent loading={loading} />
         ) : (
@@ -93,6 +96,7 @@ export default function Users() {
               columns={columns}
               data={pagination.data}
               onDelete={handleDelete}
+              onEdit={handleEdit}
             />
             <PaginationComponent
               totalRecords={pagination.totalRecords}

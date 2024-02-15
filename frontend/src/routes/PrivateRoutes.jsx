@@ -1,10 +1,13 @@
 import { Navigate } from "react-router-dom";
 import useAuth from "../utils/hooks/useAuth";
 
+import { LoaderComponent } from "../components";
+
 export const PrivateRoutes = ({ children }) => {
   const { auth, loadingAuth } = useAuth();
 
-  if (loadingAuth) return;
+  if (loadingAuth) return <LoaderComponent />
 
-  return auth[0]?.id ? children : <Navigate to="/auth/login" />;
+  const isAuthenticated = !!auth[0]?.id;
+  return isAuthenticated ? children : <Navigate to="/auth/login" />;
 };

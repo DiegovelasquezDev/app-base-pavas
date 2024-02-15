@@ -1,9 +1,12 @@
 import React from "react";
-import { AppRouter } from "./routes/AppRouter";
-import { useStateContext } from "./contexts/ContextProvider";
-import { ThemeSettingsComponent } from "./components";
 import { FiSettings } from "react-icons/fi";
+
+import { AppRouter } from "./routes/AppRouter";
+import { ThemeSettingsComponent } from "./components";
+import { useStateContext } from "./contexts/ContextProvider";
+
 import "./App.css";
+
 
 function App() {
   const { currentColor, themeSettings, setThemeSettings } = useStateContext();

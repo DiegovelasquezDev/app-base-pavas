@@ -49,14 +49,16 @@ export const getUserSession = async (req, res) => {
 };
 
 export const paginationUser = async (req, res) => {
-  const { dni, orderPagination, orderColumn, numberPage, itemsPerPage } =
+  const { search, orderPagination, orderColumn, numberPage, itemsPerPage } =
     req.query;
+
+  console.log(search)
 
   try {
     const result = await pool.query(
       "CALL sp_paginationUser(?, ?, ?, ?, ?, @totalRecords, @totalPages)",
       [
-        dni || null,
+        search || null,
         orderPagination || "created_at",
         orderColumn || "DESC", // asc o desc
         numberPage <= 0 ? 1 : numberPage || 1,
@@ -172,10 +174,12 @@ export const createUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+
   try {
     const { id } = req.query;
-    
+
     const { password } = req.body;
+    console.log({ id, password })
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

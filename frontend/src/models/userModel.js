@@ -3,8 +3,11 @@ export const loginModel = {
   password: "",
 };
 
-export const userInfo = {
-  id: null,
-  displayName: null,
-  email: null,
+export const userModel = {
+  id: "",
+  dni: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
 };
